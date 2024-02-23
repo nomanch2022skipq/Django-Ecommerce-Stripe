@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href={% static "home.css" %}>
+  </head>
+  <body>
+
+    <div class="main">
+
+    <div class="category_side">
+        <h1>Categories</h1>
+      <div class="category_inner"> {% for data in categories %} <p>{{data.name}}</p> {% endfor %} </div>
+    </div>
+    <div class="product_side">
+      <div class="product_inner"> 
+        {% for product in products %}
+        <a class="anchor" href={{product.slug}}>
+        <div class="card">
+            <img src={{ product.image.url }} alt={{ product.name }}>
+            <h1>{{product.name}}</h1>
+            <h5>Category: {{product.category}}</h5>
+            <h6>Price: {{product.price}} Rs</h6>
+        <a class="buynow" href={{product.slug}} target="_"><button type="button">View</button></a>
+        </div>
+        </a>
+    {% endfor %}
+       </div>
+    </div>
+</div>
+  </body>
+</html>

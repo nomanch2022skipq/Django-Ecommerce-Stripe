@@ -1,0 +1,98 @@
+/* home.css */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  display: flex;
+}
+
+.category_side {
+  width: 25vw;
+  height: 100vh;
+  background: #5f9ea0;
+  padding: 20px;
+  box-sizing: border-box;
+  position: fixed;
+}
+
+.category_side h1 {
+  color: white;
+  text-align: center;
+}
+
+.category_inner {
+  color: white;
+  cursor: pointer;
+}
+
+.category_inner p {
+  padding: 10px;
+  margin: 0;
+  border-bottom: 1px solid rgb(226, 226, 226);
+}
+
+.product_side {
+  margin-left: 25vw; /* Adjusted to account for the fixed category side */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.product_inner {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-sizing: border-box;
+}
+
+.card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  font-size: 17px;
+  font-weight: bold;
+  transition: all 0.1s ease-in-out;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+.card button:hover {
+  background: rgb(228, 227, 227);
+}
+.card a.buynow button {
+  text-decoration: dotted;
+  color: #5f9ea0;
+  cursor: pointer;
+}
+
+.card h1 {
+  font-size: medium;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-decoration: dotted !important;
+}
+
+.card h6 {
+  padding: 0;
+  margin: 0 0 10px 0;
+  font-size: small; /* Add your desired font size for h6 */
+  color: #888; /* Add your desired color for h6 */
+}
+
+.anchor {
+  text-decoration: none;
+  color: black;
+}

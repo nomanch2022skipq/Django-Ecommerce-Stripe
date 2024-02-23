@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "buyproduct.css" %}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+      <div class="product-data">
+        <!-- Product data goes here -->
+        <img src="{{context.0.image.url}}"  class="product-image">
+        <h2>{{context.0.name}}</h2>
+        <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Price: {{context.0.price}}</p>
+      </div>
+      <div class="card-form">
+        <!-- Card form fields go here -->
+        <h2>Card Information</h2>
+
+  
+      </form>
+      
+        
+      </div>
+    </div>
+  </body>
+</html>
