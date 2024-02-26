@@ -1,10 +1,7 @@
-from typing import Any
-from django.http import HttpResponseNotAllowed, JsonResponse
-from django.shortcuts import redirect, render, HttpResponse, HttpResponseRedirect
-from django.views.generic import TemplateView, RedirectView
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.views.generic import TemplateView
 from .models import Categories, Products, Cart
-from django.views.decorators.csrf import csrf_exempt
-from .form import CardForm
 from django.views import View
 from django.db import models
 
@@ -101,3 +98,17 @@ class Shop(TemplateView):
         return self.render_to_response(
             context={"categories": categories, "products": products}
         )
+
+
+class Checkout(TemplateView):
+    template_name = "checkout.html"
+
+    def get(self, request):
+        total_price_of_cart_item = Cart.objects.aggregate(models.Sum("product__price"))
+        cart_items = Products.objects.filter(in_cart=True)
+        context = {
+            "total_price_of_cart_item": total_price_of_cart_item,
+            "cart_items": cart_items,
+        }
+
+        return self.render_to_response(context)

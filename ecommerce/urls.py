@@ -23,7 +23,8 @@ from .views import (
     RemoveItem,
     Shop,
     removefromcart,
-)   
+    Checkout,
+)
 
 urlpatterns = [
     path("", HomeView.as_view(), name="register_view"),
@@ -37,4 +38,5 @@ urlpatterns = [
         removefromcart.as_view(),
         name="removefromcart",
     ),
+    path("checkout/", Checkout.as_view(), name="checkout"),
 ]

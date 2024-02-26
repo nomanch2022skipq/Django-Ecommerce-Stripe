@@ -4,10 +4,13 @@
 {% block title %}Shopping Cart{% endblock %}
 {% block content %}
 
-{% block cart %}
-active
-{% endblock %}
 
+
+<p style="display: none;">
+    {% block cart %}
+    active
+    {% endblock %}
+</p>
 
 <!-- {% block cart_count %}
 {{length_of_items}}
@@ -106,7 +109,7 @@ active
                             <li>Subtotal <span id="subtotal">{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
                             <li>Total <span id="total">{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                        <a href="/checkout/" class="primary-btn">Proceed to checkout</a>
                     </div>
                 </div>
             </div>
