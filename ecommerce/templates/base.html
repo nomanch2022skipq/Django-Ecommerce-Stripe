@@ -1,4 +1,6 @@
 {% load static %}
+{% load custom_filters %}
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -14,6 +16,8 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/regular.min.css" integrity="sha512-TzeemgHmrSO404wTLeBd76DmPp5TjWY/f2SyZC6/3LsutDYMVYfOx2uh894kr0j9UM6x39LFHKTeLn99iz378A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
@@ -61,7 +65,7 @@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{% static "img/icon/search.png" %}"></a>
             <a href="#"><img src="{% static "img/icon/heart.png" %}"></a>
-            <a href="/cartpage/"><img src="{% static "img/icon/cart.png" %}"> <span></span></a>
+            <a href="/shopping-cart/"><img src="{% static "img/icon/cart.png" %}"> <span></span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -110,9 +114,9 @@
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="/">Home</a></li>
-                            <li><a href="/shop/">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li class="{% block homes %}{% endblock %}"><a href="/"><i class="fa-solid fa-house-crack"></i> Home</a></li>
+                            <li class="{% block shop %}{% endblock %}"><a href="/shop/"><i class="fa-solid fa-shop"></i> Shop</a></li>
+                            {% comment %} <li><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="./about.html">About Us</a></li>
                                     <li><a href="./shop-details.html">Shop Details</a></li>
@@ -122,7 +126,8 @@
                                 </ul>
                             </li>
                             <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                            <li><a href="./contact.html">Contacts</a></li> {% endcomment %}
+                            <li class="{% block cart %}{% endblock %}"><a href="/shopping-cart/"><i class="fa-solidk fa-cart-shopping"></i> Cart</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -130,7 +135,7 @@
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="{% static "img/icon/search.png" %}"></a>
                         <a href="#"><img src="{% static "img/icon/heart.png" %}"></a>
-                        <a href="/cartpage/"><img src="{% static "img/icon/cart.png" %}"> <span>{% block cart_count %}{% endblock %}</span></a>
+                        <a href="/shopping-cart/"><img src="{% static "img/icon/cart.png" %}"> <span>{% block cart_count %}{% endblock %}</span></a>
                         <div class="price">$0.00</div>
                     </div>
                 </div>
@@ -222,6 +227,46 @@
 <script src="{% static 'js/mixitup.min.js' %}"></script>
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".add-cart").on("click", function (event) {
+            event.preventDefault();
+    
+            var button = $(this);
+            var productId = button.data("product-id");
+            var isAddOperation = button.hasClass('add-item');
+            var url = isAddOperation
+                ? '{% url "addtocart" product_id=0 %}'.replace('0', productId)
+                : '{% url "removefromcart" product_id=0 %}'.replace('0', productId);
+    
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success) {
+                        // Toggle between "Add to Cart" and "Remove Item"
+                        if (isAddOperation) {
+                            button.removeClass('add-item').addClass('remove-item').text('Remove Item');
+                        } else {
+                            button.removeClass('remove-item').addClass('add-item').text('+ Add To Cart');
+                        }
+    
+                        console.log("Item status updated successfully!");
+                    } else {
+                        console.log("Failed to update item status. Server response:", data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error in the AJAX request. textStatus:", textStatus, "errorThrown:", errorThrown);
+                }
+            });
+        });
+    });
+    
+    
+</script>
+
 
 </body>
 

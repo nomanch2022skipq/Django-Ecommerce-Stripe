@@ -15,13 +15,26 @@ Including another URLconf
 """
 
 from django.urls import path, re_path
-from .views import HomeView, BuyProduct, addtocart, CartPage, RemoveItem, Shop
+from .views import (
+    HomeView,
+    BuyProduct,
+    addtocart,
+    CartPage,
+    RemoveItem,
+    Shop,
+    removefromcart,
+)   
 
 urlpatterns = [
     path("", HomeView.as_view(), name="register_view"),
     path("buy/<slug:slug>/", BuyProduct.as_view(), name="single"),
     path("cart/<int:product_id>", addtocart.as_view(), name="addtocart"),
-    path("cartpage/", CartPage, name="cart"),
+    path("shopping-cart/", CartPage, name="cart"),
     path("removeitem/<int:product_id>/", RemoveItem.as_view(), name="removeitem"),
     path("shop/", Shop.as_view(), name="shop"),
+    path(
+        "removefromcart/<int:product_id>/",
+        removefromcart.as_view(),
+        name="removefromcart",
+    ),
 ]

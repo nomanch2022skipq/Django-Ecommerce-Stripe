@@ -4,11 +4,16 @@
 {% block title %}Shopping Cart{% endblock %}
 {% block content %}
 
-
-{% block cart_count %}
-{{length_of_items}}
+{% block cart %}
+active
 {% endblock %}
-    
+
+
+<!-- {% block cart_count %}
+{{length_of_items}}
+{% endblock %} -->
+{% load custom_filters %}
+
 
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option">
@@ -18,8 +23,8 @@
                     <div class="breadcrumb__text">
                         <h4>Shopping Cart</h4>
                         <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <a href="./shop.html">Shop</a>
+                            <a href="/">Home</a>
+                            <a href="/shop/"">Shop</a>
                             <span>Shopping Cart</span>
                         </div>
                     </div>
@@ -50,11 +55,11 @@
                                 <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
-                                            <img height="70" src="{{cart_item.product.image.url}}" alt="">
+                                            <img height="80" src="{{cart_item.product.image.url}}" alt="">
                                         </div>
                                         <div class="product__cart__item__text">
                                             <h6>{{cart_item.product.name}}</h6>
-                                            {% comment %} <h5>$98.49</h5> {% endcomment %}
+                                            <h5>$ {{ cart_item.product.price }}</h5>
                                         </div>
                                     </td>
                                     <td class="quantity__item">
@@ -64,7 +69,10 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="cart__price">$ {{cart_item.product.price}}</td>
+                                    <td class="cart__price"></td>
+
+
+
                                     <td class="cart__close"> <a href="/removeitem/{{cart_item.id}}"><i class="fa fa-close"></i></a></td>
                                 </tr>
                                 {% endfor %}
@@ -95,8 +103,8 @@
                     <div class="cart__total">
                         <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span>{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
-                            <li>Total <span>{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
+                            <li>Subtotal <span id="subtotal">{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
+                            <li>Total <span id="total">{% if length_of_items == 0 %}{% else %}$ {{totat_price.product__price__sum}}  {% endif %}</span></li>
                         </ul>
                         <a href="#" class="primary-btn">Proceed to checkout</a>
                     </div>
@@ -118,6 +126,44 @@
         </div>
     </div>
     <!-- Search End -->
+
+    <!-- Include jQuery library if not already included -->
+<!-- Include jQuery library if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Your existing HTML and Django template code -->
+
+<script>
+$(document).ready(function() {
+    // Function to update total price when quantity changes
+    function updateTotalPrice(cartItemRow) {
+        var quantity = parseInt(cartItemRow.find('.pro-qty-2 input').val()) || 0;
+        var price = parseFloat(cartItemRow.find('.product__cart__item__text h5').text().replace('$', '')) || 0;
+        var totalPrice = quantity * price;
+        cartItemRow.find('.cart__price').text('$ ' + totalPrice.toFixed(2));
+
+        // Update subtotal and total values
+        var subtotal = 0;
+        $('.cart__price').each(function() {
+            subtotal += parseFloat($(this).text().replace('$', ''));
+        });
+        $('#subtotal').text('$ ' + subtotal.toFixed(2));
+        $('#total').text('$ ' + subtotal.toFixed(2));
+    }
+
+    // Event listener for quantity input changes
+    $('.pro-qty-2 input').on('input', function() {
+        var cartItemRow = $(this).closest('tr');
+        updateTotalPrice(cartItemRow);
+    });
+
+    // Initial calculation of total prices
+    $('.pro-qty-2 input').each(function() {
+        var cartItemRow = $(this).closest('tr');
+        updateTotalPrice(cartItemRow);
+    });
+});
+</script>
 
     
 

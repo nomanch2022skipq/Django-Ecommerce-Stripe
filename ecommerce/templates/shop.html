@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Shopping Cart{% endblock %}
+{% block title %}Shop | Male Fashion{% endblock %}
 {% block content %}
+{% block shop %}
+active
+{% endblock %}
 
 
 
@@ -13,7 +16,7 @@
                     <div class="breadcrumb__text">
                         <h4>Shop</h4>
                         <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
+                            <a href="/">Home</a>
                             <span>Shop</span>
                         </div>
                     </div>
@@ -228,12 +231,10 @@
                                 <div class="product__item__text">
                                     <h6>{{product.name}}</h6>
                                     {% if product.in_cart %}
-                            <a class="add-cart">Added</a>
-                            {% else %}
-
-                            <a href="{% url "addtocart" product.id %}" class="add-cart">+ Add To Cart</a>
-                            
-                            {% endif %}
+    <a href="#" class="add-cart remove-item" data-product-id="{{ product.id }}">Remove Item</a>
+{% else %}
+    <a href="#" class="add-cart add-item" data-product-id="{{ product.id }}">+ Add To Cart</a>
+{% endif %}
                                     <div class="rating">
                                         <i class="fa fa-star-o"></i>
                                         <i class="fa fa-star-o"></i>

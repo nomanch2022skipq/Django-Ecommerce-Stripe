@@ -1,5 +1,5 @@
 from typing import Any
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect, render, HttpResponse, HttpResponseRedirect
 from django.views.generic import TemplateView, RedirectView
 from .models import Categories, Products, Cart
@@ -32,8 +32,6 @@ class BuyProduct(TemplateView):
 
 
 class addtocart(View):
-    # template_name = "shopping-cart.html"
-
     def get(self, request, *args, **kwargs):
         product_id = kwargs.get("product_id")
 
@@ -46,7 +44,27 @@ class addtocart(View):
             cart.product.in_cart = True
             cart.product.save()
 
-        return HttpResponseRedirect("/cartpage/")
+        if request.is_ajax():
+            return JsonResponse({"success": True})
+        else:
+            return redirect("cart")
+
+
+class removefromcart(View):
+    def get(self, request, *args, **kwargs):
+        product_id = kwargs.get("product_id")
+
+        try:
+            cart_item = Cart.objects.get(product_id=product_id)
+            product = Products.objects.get(name=cart_item.product.name)
+            product.in_cart = False
+            product.save()
+            cart_item.delete()
+            return JsonResponse({"success": True})
+        except Cart.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "error": "Item not found in the cart"}
+            )
 
 
 def CartPage(request, *args, **kwargs):
@@ -71,12 +89,12 @@ class RemoveItem(View):
         product.save()
         remove_item.delete()
 
-        return HttpResponseRedirect("/cartpage/")
-    
-    
+        return redirect("cart")
+
+
 class Shop(TemplateView):
     template_name = "shop.html"
-    
+
     def get(self, request):
         categories = Categories.objects.all()
         products = Products.objects.all()
