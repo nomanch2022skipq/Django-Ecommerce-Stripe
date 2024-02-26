@@ -45,6 +45,16 @@
         <div class="loader"></div>
     </div>
 
+    {% if messages %}
+    
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} m-0">
+                    {{ message }}
+                </div>
+                {% endfor %}
+    {% endif %}
+    
+
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
@@ -75,6 +85,8 @@
     </div>
     <!-- Offcanvas Menu End -->
 
+    
+
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
@@ -104,6 +116,9 @@
                 </div>
             </div>
         </div>
+
+        
+
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">

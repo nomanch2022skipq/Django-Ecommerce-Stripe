@@ -1,6 +1,8 @@
 from typing import Iterable
 from django.db import models
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
+
 
 # Create your models here.
 
@@ -56,3 +58,10 @@ class Cart(BaseModel):
 
     def __str__(self):
         return self.product.name
+
+
+class Order(BaseModel):
+    charge_id = models.CharField(max_length=255, unique=True, null=False, blank=False)
+
+    def delete(self, *args, **kwargs):
+        raise ValidationError("This field cannot be deleted.")

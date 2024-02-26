@@ -24,6 +24,8 @@ from .views import (
     Shop,
     removefromcart,
     Checkout,
+    Payment,
+    HandlePayment,
 )
 
 urlpatterns = [
@@ -39,4 +41,6 @@ urlpatterns = [
         name="removefromcart",
     ),
     path("checkout/", Checkout.as_view(), name="checkout"),
+    path("payment/", Payment.as_view(), name="payment"),
+    path("handle-payment/", HandlePayment),
 ]

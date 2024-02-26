@@ -1,9 +1,14 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, HttpResponse
 from django.views.generic import TemplateView
-from .models import Categories, Products, Cart
+from .models import Categories, Products, Cart, Order
 from django.views import View
 from django.db import models
+from django.conf import settings
+from django.http import JsonResponse, HttpResponse
+import stripe
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 
 # Create your views here.
@@ -112,3 +117,66 @@ class Checkout(TemplateView):
         }
 
         return self.render_to_response(context)
+
+
+class Payment(TemplateView):
+    template_name = "payments.html"
+
+    def get(self, request):
+
+        if Cart.objects.all().count() == 0:
+            return redirect("cart")
+
+        total_price_of_cart_item = Cart.objects.aggregate(models.Sum("product__price"))
+        request.session["total_price_of_cart_item"] = total_price_of_cart_item.get(
+            "product__price__sum"
+        )
+
+        context = {
+            "publishable_key": settings.STRIPE_PUBLIC_KEY,
+            "total_price_of_cart_item": total_price_of_cart_item,
+        }
+
+        return self.render_to_response(context)
+
+
+# views.py
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+@csrf_exempt
+def HandlePayment(request):
+    if request.method == "GET":
+        token = request.GET.get("stripeToken")
+
+        try:
+            # Create a charge using the token
+            charge = stripe.Charge.create(
+                amount=request.session["total_price_of_cart_item"] * 100,
+                currency="usd",
+                description="Example Charge",
+                source=token,
+            )
+
+            Order.objects.create(charge_id=charge.id)
+
+            Cart.objects.all().delete()
+            Products.objects.filter(in_cart=True).update(in_cart=False)
+
+            del request.session["total_price_of_cart_item"]
+
+            messages.success(request, "Payment was successful")
+
+            return redirect("/")
+
+        except stripe.error.CardError as e:
+            # If the card is declined, catch the exception and return an error response
+            return JsonResponse({"error": str(e)})
+        except Exception as e:
+            # Handle other exceptions
+            return JsonResponse({"error": str(e)})
+    else:
+        # Handle other request methods if needed
+        return JsonResponse({"error": "Invalid request method"})
